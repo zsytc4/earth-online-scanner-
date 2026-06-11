@@ -307,15 +307,20 @@ function Result({answers,birth}){
         <div style={{color:'var(--bdr)'}}>|</div>
         <div><span style={{color:'var(--dim)'}}>Loop信号 </span><span style={{color:'var(--red)',fontWeight:700}}>×1</span></div>
       </div>
-      <div style={{color:'var(--dim)',fontSize:10,marginTop:8}}>角色由你的上线数据推算 · 非答题决定</div>
     </div>
 
     <div className="sec" style={{paddingTop:20,paddingBottom:20}}>
       <Radar pct={B.pct}/>
-      <p style={{color:'var(--dim)',fontSize:11,textAlign:'center',marginTop:10}}>你的五组模块出厂配置 · 最弱的那条线里，藏着你的Loop</p>
     </div>
 
-    <div className="sec"><div className="cz" style={{color:'var(--gdim)',fontSize:10,marginBottom:12}}>IDENTITY</div><h3 style={{color:'var(--gold)',fontSize:16,marginBottom:14,fontWeight:700}}>角色描述</h3><p style={{fontSize:13.5,lineHeight:2}}>{C.desc}</p></div>
+    <div className="sec"><div className="cz" style={{color:'var(--gdim)',fontSize:10,marginBottom:12}}>IDENTITY</div><h3 style={{color:'var(--gold)',fontSize:16,marginBottom:14,fontWeight:700}}>角色描述</h3>
+      <p style={{fontSize:13.5,lineHeight:2,marginBottom:16}}>{C.desc}</p>
+      <div style={{padding:'14px 16px',border:'1px solid var(--gdim)',background:'rgba(201,169,110,.04)',marginBottom:14}}>
+        <div style={{color:'var(--dim)',fontSize:10,marginBottom:6}}>叠加「{B.prefix}」属性之后</div>
+        <p style={{fontSize:13,lineHeight:2}}>{B.element==="火"?"你做这些事的时候还特别高调。你不是暗中颠覆的阴谋家——你是点燃一把火然后站在火焰正前方、双手叉腰说「看，多漂亮」的类型。":B.element==="金"?"你的动作像手术刀划过，每一步都精准到让GM冒冷汗。别人试十次找漏洞，你一眼就看到承重柱在哪。虽然话不多，但所有人都在等你先动手。":B.element==="木"?"你的影响力不是爆炸式的是藤蔓式的——慢慢爬满整个空间之后别人才反应过来「咦什么时候全是他的东西了」。你不是最快的，但你是最后留下来的那个。":B.element==="水"?"你的颠覆是无声的。你不拆规则——你绕过它、渗透它、让它自己变得无关紧要。等别人反应过来的时候，你已经在下一条暗河里游了。":"你最可怕的地方不是快是稳。别人拼命折腾的时候你不动，等所有人跑不动了回头看——你已经走完了全程而且一步没摔。你的存在是对「速度」这个概念最大的嘲讽。"}</p>
+      </div>
+      <div style={{color:'var(--dim)',fontSize:10,lineHeight:1.8,fontStyle:'italic'}}>系统备注：此角色模板的用户满意度呈极端双峰分布。要么五星好评要么一星差评，三星约等于不存在。</div>
+    </div>
 
     {echoes.length>0&&<div className="sec" style={{background:'rgba(201,169,110,.03)'}}>
       <div className="cz" style={{color:'var(--gdim)',fontSize:10,marginBottom:14}}>ECHO</div>
@@ -324,12 +329,17 @@ function Result({answers,birth}){
     </div>}
 
     <div className="sec"><div className="cz" style={{color:'var(--gdim)',fontSize:10,marginBottom:14}}>ABILITIES</div>
-      <div style={{background:'var(--card)',border:'1px solid var(--gdim)',padding:18,marginBottom:18}}><div style={{color:'var(--gb)',fontSize:16,fontWeight:700,marginBottom:8}}>⚔ {C.ult.n}</div><p style={{fontSize:12.5,lineHeight:1.9}}>{C.ult.d}</p></div>
-      <div style={{color:'var(--dim)',fontSize:11,marginBottom:10}}>被动技能</div>
-      {C.pass.map((p,i)=><div key={i} style={{marginBottom:12,paddingLeft:12,borderLeft:'2px solid var(--bdr)'}}><div style={{color:'var(--gold)',fontSize:13,fontWeight:600}}>{p.n}</div><div style={{fontSize:12,opacity:.85}}>{p.d}</div></div>)}
+      <div style={{background:'var(--card)',border:'1px solid var(--gdim)',padding:20,marginBottom:18}}>
+        <div style={{color:'var(--gold)',fontSize:11,marginBottom:4}}>绝招 · 冷却时间极长</div>
+        <div style={{color:'var(--gb)',fontSize:18,fontWeight:900,marginBottom:10}}>⚔ {C.ult.n}</div>
+        <p style={{fontSize:13,lineHeight:2}}>{C.ult.d}</p>
+        <div style={{color:'var(--dim)',fontSize:10,marginTop:10,fontStyle:'italic'}}>—— 每次释放都会被全服记住 ——</div>
+      </div>
+      <div style={{color:'var(--dim)',fontSize:11,marginBottom:12}}>被动技能 · 开局自带</div>
+      {C.pass.map((p,i)=><div key={i} style={{marginBottom:14,padding:'12px 14px',border:'1px solid var(--bdr)',background:'rgba(201,169,110,.03)'}}><div style={{color:'var(--gold)',fontSize:14,fontWeight:700,marginBottom:4}}>{p.n}</div><div style={{fontSize:12.5,lineHeight:1.8}}>{p.d}</div></div>)}
     </div>
 
-    <div className="sec"><div className="cz" style={{color:'var(--gdim)',fontSize:10,marginBottom:14}}>EQUIPMENT</div><h3 style={{color:'var(--gold)',fontSize:16,marginBottom:12,fontWeight:700}}>装备栏</h3>{C.eq.map((e,i)=><div key={i} style={{padding:'8px 0',fontSize:13,borderBottom:i<C.eq.length-1?'1px solid var(--bdr)':'none'}}>{e}</div>)}</div>
+    <div className="sec"><div className="cz" style={{color:'var(--gdim)',fontSize:10,marginBottom:14}}>EQUIPMENT</div><h3 style={{color:'var(--gold)',fontSize:16,marginBottom:6,fontWeight:700}}>装备栏</h3><p style={{color:'var(--dim)',fontSize:11,marginBottom:14}}>你的出厂装备。不是最好的，但最适合你的打法</p>{C.eq.map((e,i)=><div key={i} style={{padding:'10px 14px',fontSize:13,marginBottom:6,border:'1px solid var(--bdr)',background:'rgba(201,169,110,.03)',display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:16}}>{i===0?"🎒":i===1?"📜":"⚗"}</span><span>{e.replace(/^[^\s]+\s/,"")}</span></div>)}</div>
 
     <div className="sec"><div className="sc">
       <div className="cz" style={{color:'var(--dim)',fontSize:9,letterSpacing:'.4em',marginBottom:8}}>EARTH ONLINE</div>
