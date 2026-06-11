@@ -268,7 +268,7 @@ return <div className="sec" style={{minHeight:'100vh',display:'flex',flexDirecti
 function Result({answers,birth}){
   const [unlocked,setUnlocked]=useState(false);
   const [mbti,setMbti]=useState(null);
-  const [showDeep,setShowDeep]=useState(false);
+  const [showDeep,setShowDeep]=useState(false);const [aiReading,setAiReading]=useState(null);const [aiLoading,setAiLoading]=useState(false);
   const B=useMemo(()=>realBazi(birth.y,birth.m,birth.d,birth.hour,birth.timeKnown)||demoBazi(birth.y,birth.m,birth.d),[birth]);
   const C=CLS[B.hiDim][B.variant];
   const baseN=BASE_N[B.hiDim];
@@ -410,9 +410,15 @@ function Result({answers,birth}){
         <h3 style={{color:'var(--gb)',fontSize:18,fontWeight:700,margin:'16px 0 10px'}}>深度配置报告</h3>
         {!showDeep?<React.Fragment>
           <p style={{color:'var(--dim)',fontSize:13,marginBottom:20,lineHeight:2}}>基于你的月令格局和日主强弱，系统已生成专属配置简报。</p>
-          <button className="btn btn-g" style={{maxWidth:280,margin:'0 auto'}} onClick={()=>setShowDeep(true)}>展开预览</button>
+          <button className="btn btn-g" style={{maxWidth:280,margin:'0 auto'}} onClick={()=>{setShowDeep(true);setAiLoading(true);setAiReading(null);
+    const bd={dayGan:B.dayGan,element:B.element,patternSS:B.patternSS,hiDim:B.hiDim,variant:B.variant,strength:B.strength,prefix:B.prefix,pct:B.pct,loDim:B.loDim,seasonTheme:SE.theme};
+    const bd2=birth.y+'-'+String(birth.m).padStart(2,'0')+'-'+String(birth.d).padStart(2,'0');
+    const bt=birth.timeKnown?String(birth.hour).padStart(2,'?')+':00':'';
+    fetch(BACKEND_URL+'/api/generate-reading',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({birth_date:bd2,birth_time:bt,bazi_data:bd})})
+    .then(r=>r.json()).then(d=>{setAiReading(d.reading||null);setAiLoading(false);}).catch(()=>{setAiLoading(false);});
+  }}>展开预览</button>
         </React.Fragment>:
-        <div className="fade" style={{textAlign:'left'}}>
+        {aiLoading?<div className="pulse" style={{textAlign:'center',padding:'40px 0'}}><div style={{color:'var(--gdim)',fontSize:16,marginBottom:8}}>命理宗师正在推演...</div><div style={{color:'var(--dim)',fontSize:11}}>结合八字格局，请稍候</div></div>:aiReading?<div className="fade" style={{textAlign:'left',whiteSpace:'pre-wrap',fontSize:13,lineHeight:2.2,padding:18,border:'1px solid var(--gdim)'}}>{aiReading}</div>:<div className="fade" style={{textAlign:'left'}}>
           <div style={{padding:18,border:'1px solid var(--gdim)',marginBottom:14}}>
             <div className="cz" style={{color:'var(--gold)',fontSize:10,marginBottom:8}}>格局分析</div>
             <p style={{fontSize:13,lineHeight:2,color:'var(--parch)'}}>月令 <span style={{color:'var(--gb)'}}>{B.patternSS}格</span>，日主<span style={{color:'var(--gb)'}}>{B.element}</span>属，<span style={{color:'var(--gold)'}}>{B.strength}</span>。{(B.strength==="身强"?"日主有根有气，能担财官——你是那种压力越大发挥越好的人。":B.strength==="中和"?"日主不弱不强，可塑性极高——环境对你的影响比配置本身更大。":"日主偏弱，需要借力——你不适合硬刚正面，找靠山比硬扛聪明十倍。")}格局当令，{(B.variant==="偏"?"偏":"正")}星透出，{(B.variant==="偏"?"不走正门走侧门，你的天赋在打破常规而不是遵守它。":"正统路线是你的最优解。稳扎稳打，按规则升级。")}</p>
@@ -429,8 +435,8 @@ function Result({answers,birth}){
             <div className="cz" style={{color:'var(--gold)',fontSize:10,marginBottom:8}}>赛季行动建议</div>
             <p style={{fontSize:13,lineHeight:2,color:'var(--parch)'}}>你的{B.hiDim}模块由格局锁定为核心配置。{SE.theme}是你在本版本的第一优先级。不要把精力分散到五条线——集中{B.hiDim}一条，把{B.loDim}的短板交给队友或工具补。</p>
           </div>
-          <p style={{color:'var(--dim)',fontSize:11,marginTop:8}}>以上为系统自动生成简报。完整推演（十年版本图谱 / 全赛季展开 / 前置剧情深度解析）需引路员协助读取。</p>
-        </div>}
+          <p style={{color:'var(--dim)',fontSize:11,marginTop:8}}>以上为系统自动生成简报。</p>
+        </div>}}
         <div style={{color:'var(--dim)',fontSize:10,marginTop:24,lineHeight:2,maxWidth:340,marginLeft:'auto',marginRight:'auto'}}>本报告仅供娱乐与自我探索。你可以笑可以转发但别太当真——你的人生不由任何系统定义。</div>
         <div className="cz" style={{color:'var(--dim)',fontSize:9,marginTop:16}}>EARTH ONLINE · v7.0</div>
       </div>
@@ -450,6 +456,8 @@ function App(){
     {stage==="result"&&<Result answers={ans} birth={birth}/>}
   </div>;
 }
+const BACKEND_URL=localStorage.getItem("eo_backend_url")||"http://localhost:8000";
+
 ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script>
 </body>
