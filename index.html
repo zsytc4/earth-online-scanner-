@@ -195,20 +195,15 @@ function realBazi(y,m,d,hour,timeKnown){
     strength-=sums["输出"]*0.25+sums["秩序"]*0.25;
     const strong=strength>=1.0;
 
-    // ── 5. 职业：格局驱动（比劫格特殊处理）──
+    // ── 5. 职业：格局驱动（比劫格永远是独立，强弱只影响正/偏）──
     let hi;
     if(patternDim==="独立"){
-      hi=strong?["输出","资源","秩序"].reduce((a,b)=>sums[a]>=sums[b]?a:b)
-               :["认知","独立"].reduce((a,b)=>sums[a]>=sums[b]?a:b);
+      hi="独立";
     }else{
       hi=patternDim;
-      // 格局维度极弱时（被严重克制），降级取次强
-      if(sums[hi]<1.0&&strong){
-        hi=["输出","资源","秩序"].filter(d=>d!==hi).reduce((a,b)=>sums[a]>=sums[b]?a:b)||hi;
-      }
     }
     let p=0,z=0;Object.keys(indiv).forEach(ss=>{if(SS_GROUP[ss]===hi){if(SS_PIAN.has(ss))p+=indiv[ss];else z+=indiv[ss];}});
-    const vt=p>=z?"偏":"正";
+    const vt=patternDim==="独立"&&p>z*0.6?"偏":p>=z?"偏":"正";
 
     // ── 6. 雷达 & Loop ──
     const maxS=Math.max(...DIM_ORDER.map(g=>sums[g]),0.01);
