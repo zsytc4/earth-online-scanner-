@@ -457,36 +457,35 @@ function Result({answers,birth}){
 
       <div className="sec"><div className="cz" style={{color:'var(--gdim)',fontSize:10,marginBottom:14}}>CROSS ANALYSIS</div><h3 style={{color:'var(--gold)',fontSize:16,marginBottom:6,fontWeight:700}}>MBTI × {C.name}</h3><div style={{color:'var(--dim)',fontSize:11,marginBottom:14}}>选择你的 MBTI 类型</div>
         <div className="mg">{MBTI_TYPES.map(t=><button key={t} className={"mb "+(mbti===t?"act":"")} onClick={()=>setMbti(t)}>{t}</button>)}</div>
-        {mbti&&mx[mbti]&&(()=>{const parts=mx[mbti].split('——');const title=parts[0];const lines=parts.slice(1).join('——').split('。').filter(s=>s.trim());let h=0;for(const ch of mbti+C.name)h+=ch.charCodeAt(0);const st=3+(h%3);return <div className="fade" style={{marginTop:18}}>
-          <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:6}}><span style={{color:'var(--dim)',fontSize:12}}>{mbti} × {C.name}</span><span style={{color:'var(--gold)',fontSize:14,letterSpacing:2}}>{'★'.repeat(st)+'☆'.repeat(5-st)}</span></div>
-          <div style={{color:'var(--gb)',fontSize:18,fontWeight:900,marginBottom:12}}>{title}</div>
-          {lines.map((s,i)=><p key={i} style={{fontSize:13,lineHeight:2,marginBottom:8}}>{s}。</p>)}
-          <p style={{color:'var(--dim)',fontSize:11,marginTop:8,fontStyle:'italic'}}>—— {C.name}的{mbti}变体。同样的角色模板，你的打法天生和别人不太一样。</p>
+        {mbti&&mx[mbti]&&(()=>{const t=mx[mbti].split('——');const title=t[0];const body=t.slice(1).join('——');let h=0;for(const ch of mbti+C.name)h+=ch.charCodeAt(0);const st=3+(h%3);return <div className="fade" style={{marginTop:18}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:4}}><span style={{color:'var(--dim)',fontSize:12}}>{mbti} × {C.name}</span><span style={{color:'var(--gold)',fontSize:14,letterSpacing:2}}>{'★'.repeat(st)+'☆'.repeat(5-st)}</span></div>
+          <div style={{color:'var(--gb)',fontSize:18,fontWeight:900,marginBottom:10}}>{title}</div>
+          <p style={{fontSize:13,lineHeight:2}}>{body}</p>
         </div>;})()}
       </div>
 
       <div className="sec" style={{textAlign:'center'}}>
         <div className="gm" style={{color:'var(--gdim)',letterSpacing:12,opacity:.6}}>— ◆ —</div>
         <h3 style={{color:'var(--gb)',fontSize:18,fontWeight:700,margin:'16px 0 4px'}}>深度配置报告</h3>
-        <p style={{color:'var(--dim)',fontSize:12,marginBottom:14}}>免费报告告诉你是什么人。这份告诉你什么时候出手、往哪走。</p>
+        <p style={{color:'var(--dim)',fontSize:12,marginBottom:14}}>以上是免费公开数据。深度报告 = 你的隐藏关卡攻略。</p>
         <div style={{textAlign:'left',maxWidth:380,margin:'0 auto 18px',fontSize:12.5,lineHeight:2.4}}>
-          <p><span style={{color:'var(--gold)'}}>◆</span> 你现在跑在大版本的第几年、转折点在哪</p>
-          <p><span style={{color:'var(--gold)'}}>◆</span> 2026 事业·关系·身体三线全开</p>
-          <p><span style={{color:'var(--gold)'}}>◆</span> Loop 溯源 — 不是告诉你它在哪，是它从哪来</p>
-          <p><span style={{color:'var(--gold)'}}>◆</span> 环境·作息·方位的可执行补丁</p>
-          <p><span style={{color:'var(--gold)'}}>◆</span> 按你配置匹配的实体装备</p>
-          <p><span style={{color:'var(--gold)'}}>◆</span> 前置剧情 — 那个比你还老的执念</p>
+          <p><span style={{color:'var(--gold)'}}>◆</span> 十年版本图谱 — 你现在在第几关、Boss什么时候刷</p>
+          <p><span style={{color:'var(--gold)'}}>◆</span> 2026赛季三线地图 — 事业线 · 关系线 · 生命值</p>
+          <p><span style={{color:'var(--gold)'}}>◆</span> 隐藏Boss攻略 — 你的专属Loop怎么打</p>
+          <p><span style={{color:'var(--gold)'}}>◆</span> 可装备补丁 — 环境/作息/方位参数调整</p>
+          <p><span style={{color:'var(--gold)'}}>◆</span> 专属神装 — 按你属性匹配的装备推荐</p>
+          <p><span style={{color:'var(--gold)'}}>◆</span> 隐藏剧情解锁 — 你的前置任务线</p>
         </div>
         <p style={{color:'var(--dim)',fontSize:11,marginBottom:16}}>按存档码单份推演 · 引路员私发</p>
-        <button className="btn" style={{maxWidth:300,margin:'0 auto'}} onClick={()=>{if(REVIEW_MODE)setShowSample(s=>!s);else alert('微信向引路员发送「深度报告」即可预约');}}>{REVIEW_MODE?(showSample?'收起样例':'微信发送「深度报告」预约（点击预览）'):'微信发送「深度报告」预约'}</button>
+        <button className="btn" style={{maxWidth:300,margin:'0 auto'}} onClick={()=>{if(REVIEW_MODE)setShowSample(s=>!s);else alert('微信向引路员发送「隐藏攻略」即可解锁');}}>{REVIEW_MODE?(showSample?'收起样例':'微信发送「隐藏攻略」解锁（点击预览）'):'微信发送「隐藏攻略」解锁'}</button>
         {showSample&&<div className="fade" style={{textAlign:'left',marginTop:20,padding:18,border:'1px solid var(--gdim)',background:'rgba(0,0,0,.2)'}}>
           <p style={{color:'var(--red)',fontSize:10,marginBottom:12}}>▲ 审阅样例 · 正式版AI逐份生成</p>
           <h4 style={{color:'var(--gold)',fontSize:14,fontWeight:700,marginBottom:6}}>一 · 十年版本图谱</h4>
-          <p style={{fontSize:12,lineHeight:2,marginBottom:10}}>当前运行在「{SE.theme}」大版本中段。转折点位于 ▒▒▒▒……</p>
+          <p style={{fontSize:12,lineHeight:2,marginBottom:10}}>当前关卡：「{SE.theme}」版本中段。Boss刷新点 ▒▒▒▒……</p>
           <h4 style={{color:'var(--gold)',fontSize:14,fontWeight:700,marginBottom:6}}>四 · 系统补丁</h4>
-          <p style={{fontSize:12,lineHeight:2,marginBottom:10}}>{B.element}属 · {B.prefix}系。环境 ▒▒▒、作息 ▒▒▒、方位 ▒▒▒……</p>
+          <p style={{fontSize:12,lineHeight:2,marginBottom:10}}>{B.element}属 · {B.prefix}系。推荐装备位 ▒▒▒、增益时段 ▒▒▒、有利方位 ▒▒▒……</p>
           <h4 style={{color:'var(--gold)',fontSize:14,fontWeight:700,marginBottom:6}}>五 · 装备清单</h4>
-          <p style={{fontSize:12,lineHeight:2}}>主装备 · {B.prefix}系适配 // 副装备 · 针对「{L.name}」补位</p>
+          <p style={{fontSize:12,lineHeight:2}}>主装备 · {B.prefix}系神装 // 副装备 · 针对「{L.name}」的抗性装备</p>
         </div>}
         <div style={{color:'var(--dim)',fontSize:10,marginTop:20,lineHeight:2,maxWidth:340,marginLeft:'auto',marginRight:'auto'}}>仅供娱乐与自我探索。可以转发但别太当真——你的人生不由系统定义。</div>
         <div className="cz" style={{color:'var(--dim)',fontSize:9,marginTop:14}}>EARTH ONLINE · v6.0</div>
