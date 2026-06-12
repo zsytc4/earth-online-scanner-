@@ -303,11 +303,12 @@ return <div className="sec" style={{minHeight:'100vh',display:'flex',flexDirecti
   <div className="bar-t" style={{maxWidth:200,marginTop:20}}><div className="bar-f" style={{width:`${((m+1)/LMSGS.length)*100}%`,background:'var(--gdim)'}}/></div>
 </div>;}
 
-function Result({answers,birth}){
+function Result({answers,birth,aiResult}){
   const [unlocked,setUnlocked]=useState(REVIEW_MODE);
   const [mbti,setMbti]=useState(null);
   const [code,setCode]=useState("");
-  const B=useMemo(()=>realBazi(birth.y,birth.m,birth.d,birth.hour,birth.timeKnown)||demoBazi(birth.y,birth.m,birth.d),[birth]);
+  const B_raw=useMemo(()=>realBazi(birth.y,birth.m,birth.d,birth.hour,birth.timeKnown)||demoBazi(birth.y,birth.m,birth.d),[birth]);
+  const B=useMemo(()=>aiResult?{...B_raw,hiDim:{法师:'输出',战士:'独立',骑士:'秩序',猎人:'资源',贤者:'认知'}[aiResult.base]:B_raw.hiDim,variant:aiResult.variant||B_raw.variant,aiReason:aiResult.reason}:{...B_raw,aiReason:null},[B_raw,aiResult]);
   const C=CLS[B.hiDim][B.variant];
   const baseN=BASE_N[B.hiDim];
   const fullName=`${B.prefix} · ${C.name}`;
@@ -339,6 +340,7 @@ function Result({answers,birth}){
       <div className="gm" style={{color:'var(--gdim)',letterSpacing:12,opacity:.6,margin:'10px 0'}}>— ◆ —</div>
       <div className="cz" style={{color:'var(--gold)',fontSize:12,marginBottom:4}}>{B.prefix}</div>
       <h1 style={{color:'var(--gb)',fontSize:32,fontWeight:900,margin:'2px 0 8px'}}>{C.name}</h1>
+      {B.aiReason&&<div className="cz" style={{color:'var(--gold)',fontSize:10,marginBottom:8,opacity:.8}}>AI判定：{B.aiReason}</div>}
       <div style={{display:'inline-block',border:'1px solid var(--gdim)',padding:'4px 14px',fontSize:12,marginBottom:16}}><span style={{color:'var(--dim)'}}>当前 · </span><span style={{color:'var(--gold)'}}>{state}</span></div>
       <div className="gm" style={{fontSize:13,color:'var(--gdim)',marginBottom:20}}>— {C.tag} —</div>
       <div style={{display:'flex',justifyContent:'center',gap:24,fontSize:12}}>
@@ -483,14 +485,23 @@ function App(){
   const [stage,setStage]=useState("title");
   const [ans,setAns]=useState([]);
   const [birth,setBirth]=useState({y:1990,m:6,d:15,hour:12,timeKnown:true});
+  const [aiResult,setAiResult]=useState(null);
+  const callAI=()=>{
+    const bd=birth.y+'-'+String(birth.m).padStart(2,'0')+'-'+String(birth.d).padStart(2,'0');
+    const bt=birth.timeKnown?String(birth.hour).padStart(2,'?')+':00':'unknown';
+    fetch(BACKEND_URL+'/api/scan-ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({birth_date:bd,birth_time:bt,quiz_answers:ans})})
+    .then(r=>r.json()).then(d=>{setAiResult(d.error?null:d);setStage('result');}).catch(()=>{setAiResult(null);setStage('result');});
+  };
   return <div className="eo">
     {stage==="title"&&<Title go={()=>setStage("quiz")}/>}
     {stage==="quiz"&&<Quiz onDone={a=>{setAns(a);setStage("birth");}}/>}
-    {stage==="birth"&&<Birth go={b=>{setBirth(b);setStage("load");}}/>}
+    {stage==="birth"&&<Birth go={b=>{setBirth(b);callAI();setStage("load");}}/>}
     {stage==="load"&&<Loading go={()=>setStage("result")}/>}
-    {stage==="result"&&<Result answers={ans} birth={birth}/>}
+    {stage==="result"&&<Result answers={ans} birth={birth} aiResult={aiResult}/>}
   </div>;
 }
+const BACKEND_URL=localStorage.getItem("eo_backend")||"http://localhost:8000";
+
 ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script>
 </body>
