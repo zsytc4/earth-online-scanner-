@@ -473,31 +473,28 @@ function Result({answers,birth}){
 
       <div className="sec" style={{textAlign:'center'}}>
         <div className="gm" style={{color:'var(--gdim)',letterSpacing:12,opacity:.6}}>— ◆ —</div>
-        <h3 style={{color:'var(--gb)',fontSize:18,fontWeight:700,margin:'16px 0 10px'}}>深度配置报告</h3>
-        <p style={{fontSize:13.5,lineHeight:2,maxWidth:380,margin:'0 auto 20px',textAlign:'left'}}>这份免费报告回答了「你是谁」。深度报告回答的是三个更值钱的问题：<span style={{color:'var(--gb)'}}>你正走到哪一步、什么时候该出手、那个Loop到底从哪来。</span></p>
-        <div style={{textAlign:'left',maxWidth:380,margin:'0 auto 18px',fontSize:12.5,lineHeight:2}}>
-          <p style={{marginBottom:10}}><span style={{color:'var(--gold)'}}>◆ 十年版本图谱</span> — 你正处在大版本的第几年、转折点落在哪一年。提前知道和事后才懂，中间差的可能就是这十年。</p>
-          <p style={{marginBottom:10}}><span style={{color:'var(--gold)'}}>◆ 2026赛季全维度展开</span> — 事业的窗口期、关系的剧情点、身体的损耗位，精确到值得记进日历。</p>
-          <p style={{marginBottom:10}}><span style={{color:'var(--gold)'}}>◆ 前置剧情完整解析</span> — 那个比你还老的执念：从哪来、抓着什么、怎么放。</p>
-          <p style={{marginBottom:10}}><span style={{color:'var(--gold)'}}>◆ Loop溯源路径</span> — 不只告诉你loop在哪，告诉你它的安装时间和卸载顺序。</p>
-          <p style={{marginBottom:10}}><span style={{color:'var(--gold)'}}>◆ 系统补丁建议</span> — 不是「多穿红色」，是具体到环境、作息、方位的可执行参数。</p>
-          <p style={{marginBottom:10}}><span style={{color:'var(--gold)'}}>◆ 可选装备清单</span> — 按你的配置匹配的实体装备，每一件带适配理由。</p>
-          <p style={{marginBottom:0}}><span style={{color:'var(--gold)'}}>◆ 下一版本预告</span> — 这个版本结束之后，系统准备把你推向哪。</p>
+        <h3 style={{color:'var(--gb)',fontSize:18,fontWeight:700,margin:'16px 0 4px'}}>深度配置报告</h3>
+        <p style={{color:'var(--dim)',fontSize:12,marginBottom:14}}>免费报告告诉你是什么人。这份告诉你什么时候出手、往哪走。</p>
+        <div style={{textAlign:'left',maxWidth:380,margin:'0 auto 18px',fontSize:12.5,lineHeight:2.4}}>
+          <p><span style={{color:'var(--gold)'}}>◆</span> 你现在跑在大版本的第几年、转折点在哪</p>
+          <p><span style={{color:'var(--gold)'}}>◆</span> 2026 事业·关系·身体三线全开</p>
+          <p><span style={{color:'var(--gold)'}}>◆</span> Loop 溯源 — 不是告诉你它在哪，是它从哪来</p>
+          <p><span style={{color:'var(--gold)'}}>◆</span> 环境·作息·方位的可执行补丁</p>
+          <p><span style={{color:'var(--gold)'}}>◆</span> 按你配置匹配的实体装备</p>
         </div>
-        <p style={{color:'var(--dim)',fontSize:12,marginBottom:18}}>每一份由AI按你的存档码单独推演，没有两份相同 · PDF交付 · 引路员私发</p>
-        <button className="btn" style={{maxWidth:300,margin:'0 auto'}} onClick={()=>{if(REVIEW_MODE)setShowSample(s=>!s);else alert('回到微信，向引路员发送「深度报告」即可预约');}}>{REVIEW_MODE?(showSample?'收起样例预览 ↑':'在微信里发送「深度报告」预约（点击看样例）'):'在微信里发送「深度报告」预约'}</button>
-        {showSample&&<div className="fade" style={{textAlign:'left',marginTop:24,padding:20,border:'1px solid var(--gdim)',background:'rgba(0,0,0,.2)'}}>
-          <p style={{color:'var(--red)',fontSize:10,letterSpacing:'.1em',marginBottom:14}}>▲ 审阅模式样例 · 正式版由AI根据用户存档码逐份生成，内容为千字级专属解读</p>
-          <h4 style={{color:'var(--gold)',fontSize:15,fontWeight:700,marginBottom:8}}>一 · 十年版本图谱<span style={{color:'var(--dim)',fontSize:11,fontWeight:400}}>（节选）</span></h4>
-          <p style={{fontSize:12.5,lineHeight:2,marginBottom:6}}>你当前运行在一个以「{SE.theme}」为主题的大版本中段。这个版本从大约 ▒▒▒▒ 年启动，系统在版本前半段反复让你经历 ▒▒▒▒ 类事件——不是刁难，是在为版本后半段的 ▒▒▒▒ 做参数预热。按推演，这个版本的关键转折点位于 ▒▒▒▒……</p>
-          <h4 style={{color:'var(--gold)',fontSize:15,fontWeight:700,margin:'16px 0 8px'}}>四 · 系统补丁建议<span style={{color:'var(--dim)',fontSize:11,fontWeight:400}}>（节选）</span></h4>
-          <p style={{fontSize:12.5,lineHeight:2,marginBottom:6}}>你的{B.element}属性资源当前处于 ▒▒ 位运行——具体到日常：工作环境的 ▒▒▒、作息中的 ▒▒▒ 时段、以及 ▒▒▒ 方位，都是可执行的参数调整点。不是玄学仪式，是把环境变量调到和你配置顺手的档位……</p>
-          <h4 style={{color:'var(--gold)',fontSize:15,fontWeight:700,margin:'16px 0 8px'}}>五 · 可选装备清单<span style={{color:'var(--dim)',fontSize:11,fontWeight:400}}>（节选）</span></h4>
-          <p style={{fontSize:12.5,lineHeight:2,marginBottom:6}}>◆ 主装备推荐 · {B.prefix}系适配 — ▒▒▒石（附适配理由与佩戴位说明）<br/>◆ 副装备 · ▒▒▒ — 针对你的「{L.name}」做的补位配置……</p>
-          
+        <p style={{color:'var(--dim)',fontSize:11,marginBottom:16}}>按存档码单份推演 · 引路员私发</p>
+        <button className="btn" style={{maxWidth:300,margin:'0 auto'}} onClick={()=>{if(REVIEW_MODE)setShowSample(s=>!s);else alert('微信向引路员发送「深度报告」即可预约');}}>{REVIEW_MODE?(showSample?'收起样例':'微信发送「深度报告」预约（点击预览）'):'微信发送「深度报告」预约'}</button>
+        {showSample&&<div className="fade" style={{textAlign:'left',marginTop:20,padding:18,border:'1px solid var(--gdim)',background:'rgba(0,0,0,.2)'}}>
+          <p style={{color:'var(--red)',fontSize:10,marginBottom:12}}>▲ 审阅样例 · 正式版AI逐份生成</p>
+          <h4 style={{color:'var(--gold)',fontSize:14,fontWeight:700,marginBottom:6}}>一 · 十年版本图谱</h4>
+          <p style={{fontSize:12,lineHeight:2,marginBottom:10}}>当前运行在「{SE.theme}」大版本中段。转折点位于 ▒▒▒▒……</p>
+          <h4 style={{color:'var(--gold)',fontSize:14,fontWeight:700,marginBottom:6}}>四 · 系统补丁</h4>
+          <p style={{fontSize:12,lineHeight:2,marginBottom:10}}>{B.element}属 · {B.prefix}系。环境 ▒▒▒、作息 ▒▒▒、方位 ▒▒▒……</p>
+          <h4 style={{color:'var(--gold)',fontSize:14,fontWeight:700,marginBottom:6}}>五 · 装备清单</h4>
+          <p style={{fontSize:12,lineHeight:2}}>主装备 · {B.prefix}系适配 // 副装备 · 针对「{L.name}」补位</p>
         </div>}
-        <div style={{color:'var(--dim)',fontSize:10,marginTop:24,lineHeight:2,maxWidth:340,marginLeft:'auto',marginRight:'auto'}}>本报告仅供娱乐与自我探索。你可以笑可以转发但别太当真——你的人生不由任何系统定义。</div>
-        <div className="cz" style={{color:'var(--dim)',fontSize:9,marginTop:16}}>EARTH ONLINE · v6.0</div>
+        <div style={{color:'var(--dim)',fontSize:10,marginTop:20,lineHeight:2,maxWidth:340,marginLeft:'auto',marginRight:'auto'}}>仅供娱乐与自我探索。可以转发但别太当真——你的人生不由系统定义。</div>
+        <div className="cz" style={{color:'var(--dim)',fontSize:9,marginTop:14}}>EARTH ONLINE · v6.0</div>
       </div>
     </div>}
   </div>;
