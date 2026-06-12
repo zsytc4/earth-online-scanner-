@@ -157,69 +157,69 @@ function realBazi(y,m,d,hour,timeKnown){
     const ec=solar.getLunar().getEightChar();
     const dayGan=ec.getDayGan();
     const elem=GAN_INFO[dayGan][0];
-    const yearGan=ec.getYearGan(),monthGan=ec.getMonthGan(),monthZhi=ec.getMonthZhi();
-    const timeGan=timeKnown?ec.getTimeGan():null;
-    const mh=ec.getMonthHideGan()||[];
+    const monthZhi=ec.getMonthZhi();
 
-    // ── 1. 格局：月令藏干透干者立格（本气优先），比劫不立格 ──
-    const visible=[yearGan,monthGan,timeGan].filter(Boolean);
-    let gejuGan=null;
-    for(const h of mh){
-      const ss=shiShenOf(dayGan,h);
-      if(ss==="比肩"||ss==="劫财")continue;
-      if(visible.indexOf(h)>=0){gejuGan=h;break;}
-    }
-    if(!gejuGan){for(const h of mh){const ss=shiShenOf(dayGan,h);if(ss!=="比肩"&&ss!=="劫财"){gejuGan=h;break;}}}
+    // ── 1. 格局：月令主气十神 → 格局 → 职业维度（库方法，不用自己算十神）──
+    const mzSS=ec.getMonthShiShenZhi()||[];
+    const patternSS=mzSS[0]||ec.getMonthShiShenGan()||"正印";
+    const patternDim=SS_GROUP[patternSS]||"认知";
+    const patternPian=SS_PIAN.has(patternSS);
 
-    // ── 2. 加权（月令为纲）──
+    // ── 2. 得令判定（月令五行对日主的影响）──
+    const mWx=ZHI_WX[monthZhi];
+    const deLing=(mWx===elem);
+    const yLSW=(SHENG[mWx]===elem);
+    const wSYL=(SHENG[elem]===mWx);
+    const yLKW=(KE[mWx]===elem);
+
+    // ── 3. 十神分布（直接用库的 getXxxShiShen，不做自定义计算）──
     const sums={};DIM_ORDER.forEach(g=>sums[g]=0);
     const indiv={};
-    const addG=(g,w)=>{if(!g)return;const ss=shiShenOf(dayGan,g);const grp=SS_GROUP[ss];if(!grp)return;sums[grp]+=w;indiv[ss]=(indiv[ss]||0)+w;};
-    addG(yearGan,0.8);addG(monthGan,1.2);if(timeGan)addG(timeGan,0.8);
-    const addHide=(arr,ws)=>{(arr||[]).forEach((h,i)=>addG(h,ws[i]||0.1));};
-    addHide(mh,[2.0,0.6,0.3]);
-    addHide(ec.getYearHideGan(),[0.6,0.3,0.15]);
-    addHide(ec.getDayHideGan(),[0.6,0.3,0.15]);
-    if(timeKnown)addHide(ec.getTimeHideGan(),[0.6,0.3,0.15]);
+    const addSS=(ss,w)=>{if(!ss)return;const grp=SS_GROUP[ss];if(!grp)return;sums[grp]+=w;indiv[ss]=(indiv[ss]||0)+w;};
+    addSS(ec.getYearShiShenGan(),1.0);
+    addSS(ec.getMonthShiShenGan(),1.0);
+    if(timeKnown)addSS(ec.getTimeShiShenGan(),1.0);
+    const zhiW=[0.7,0.3,0.2];
+    (ec.getYearShiShenZhi()||[]).forEach((ss,i)=>addSS(ss,zhiW[i]||0.1));
+    (ec.getMonthShiShenZhi()||[]).forEach((ss,i)=>addSS(ss,i===0?2.0:(zhiW[i]||0.1)));
+    (ec.getDayShiShenZhi()||[]).forEach((ss,i)=>addSS(ss,zhiW[i]||0.1));
+    if(timeKnown)(ec.getTimeShiShenZhi()||[]).forEach((ss,i)=>addSS(ss,zhiW[i]||0.1));
 
-    // ── 3. 强弱：得令为纲，非纯权重比大小 ──
-    const mWx=ZHI_WX[monthZhi]; // 月令五行
+    // ── 4. 强弱（得令为纲）──
     let strength=0;
-    if(mWx===elem)strength+=3;        // 得令：日主与月令同五行 — 最强
-    else if(SHENG[mWx]===elem)strength+=2; // 月令生我（印）— 次强
-    else if(SHENG[elem]===mWx)strength-=2; // 我生月令（食伤泄）— 弱
-    else if(KE[mWx]===elem)strength-=3;    // 月令克我（官杀）— 最弱
-    // 得地：日支是否扶助
+    if(deLing)strength+=3;else if(yLSW)strength+=2;else if(wSYL)strength-=2;else if(yLKW)strength-=3;
     const dZhi=ec.getDayZhi();
-    if(ZHI_WX[dZhi]===elem)strength+=1;
+    if(ZHI_WX[dZhi]===elem)strength+=1;else if(SHENG[ZHI_WX[dZhi]]===elem)strength+=1.5;
     if(SHENG[elem]===ZHI_WX[dZhi])strength-=0.5;
-    // 得生+得助：印+比劫加权补正
-    strength+=(sums["认知"]*0.4+sums["独立"]*0.25);
-    strength-=(sums["输出"]*0.3+sums["秩序"]*0.3);
-    const strong=strength>=1.5;
+    strength+=sums["认知"]*0.3+sums["独立"]*0.2;
+    strength-=sums["输出"]*0.25+sums["秩序"]*0.25;
+    const strong=strength>=1.0;
 
-    // ── 4. 用神定职业 ──
+    // ── 5. 职业：格局驱动（比劫格特殊处理）──
     let hi;
-    if(strong){
-      hi=["输出","资源","秩序"].reduce((a,b)=>sums[a]>=sums[b]?a:b);
+    if(patternDim==="独立"){
+      hi=strong?["输出","资源","秩序"].reduce((a,b)=>sums[a]>=sums[b]?a:b)
+               :["认知","独立"].reduce((a,b)=>sums[a]>=sums[b]?a:b);
     }else{
-      hi=["认知","独立"].reduce((a,b)=>sums[a]>=sums[b]?a:b);
+      hi=patternDim;
+      // 格局维度极弱时（被严重克制），降级取次强
+      if(sums[hi]<1.0&&strong){
+        hi=["输出","资源","秩序"].filter(d=>d!==hi).reduce((a,b)=>sums[a]>=sums[b]?a:b)||hi;
+      }
     }
     let p=0,z=0;Object.keys(indiv).forEach(ss=>{if(SS_GROUP[ss]===hi){if(SS_PIAN.has(ss))p+=indiv[ss];else z+=indiv[ss];}});
     const vt=p>=z?"偏":"正";
-    let geju=gejuGan?shiShenOf(dayGan,gejuGan)+"格":"建禄/羊刃";
 
-    // ── 5. 雷达 & Loop ──
+    // ── 6. 雷达 & Loop ──
     const maxS=Math.max(...DIM_ORDER.map(g=>sums[g]),0.01);
     const pct={};const lv={};
     const sorted=[...DIM_ORDER].sort((a,b)=>sums[b]-sums[a]);
     sorted.forEach((g,i)=>{lv[g]=i<2?"H":i<3?"M":"L";});
     DIM_ORDER.forEach(g=>{pct[g]=Math.round(28+(sums[g]/maxS)*67);});
     const lo=DIM_ORDER.reduce((a,b)=>sums[a]<=sums[b]?a:b);
-    return {prefix:ELEM_PREFIX[elem],element:elem,dayGan,geju,hiDim:hi,loDim:lo,variant:vt,pct,lv,demo:false};
+    return {prefix:ELEM_PREFIX[elem],element:elem,dayGan,geju:patternSS+"格",hiDim:hi,loDim:lo,variant:vt,pct,lv,demo:false};
   }catch(e){return null;}
 }
-// 排盘库加载失败时的演示模式
 function demoBazi(y,m,d){
   let seed=y*10000+m*100+d;const rnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280;};
   const sums={};DIM_ORDER.forEach(g=>sums[g]=1+rnd()*3);
