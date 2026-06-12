@@ -437,37 +437,31 @@ function Result({answers,birth}){
         <h3 style={{color:'var(--gold)',fontSize:16,marginBottom:6,fontWeight:700}}>本赛季信号</h3>
         <div style={{display:'inline-block',border:'1px solid var(--gold)',padding:'6px 18px',margin:'8px 0 16px'}}><span style={{color:'var(--dim)',fontSize:11}}>版本主题 · </span><span style={{color:'var(--gb)',fontSize:16,fontWeight:700}}>{SE.theme}</span></div>
         <p style={{fontSize:13.5,lineHeight:2,marginBottom:12}}>{SE.s1}</p>
-        <p style={{fontSize:13.5,lineHeight:2}}>{SE.s2}<span style={{color:'var(--dim)'}}> ▒▒▒▒▒▒……</span></p>
+        
         
       </div>
 
       <div className="sec" style={{background:'rgba(201,169,110,.04)'}}>
         <div className="cz" style={{color:'var(--gdim)',fontSize:10,marginBottom:14}}>LOOP</div>
         <h3 style={{color:'var(--gold)',fontSize:17,marginBottom:16,fontWeight:700}}>Loop 诊断</h3>
-        <p style={{fontSize:14,lineHeight:2,marginBottom:16}}>在你的五组模块里，<span style={{color:'var(--gb)'}}>{B.loDim}</span>是配置最弱的一条线——系统在这里检测到一组循环信号。</p>
+        <p style={{fontSize:14,lineHeight:2,marginBottom:16}}>系统扫描了你五组模块的出厂权重——<span style={{color:'var(--gb)'}}>{B.loDim}</span>天生信号最弱。不是说你这方面不行，是说每次碰到这个维度的事，你比别的维度多绕一段路。绕多了就成了Loop。</p>
         <div style={{padding:18,border:'1px solid var(--gdim)',background:'rgba(0,0,0,.15)',marginBottom:16}}>
           <div style={{color:'var(--gb)',fontSize:16,fontWeight:700,marginBottom:8}}>{L.name}</div>
           <p style={{fontSize:13,lineHeight:2,marginBottom:12}}>{L.desc}</p>
           <div className="cz" style={{fontSize:12,color:'var(--gold)',padding:'8px 12px',background:'rgba(0,0,0,.3)'}}>Loop: {L.code} · ██████░░░ {strength}%</div>
         </div>
-        <p style={{color:'var(--dim)',fontSize:12.5,lineHeight:1.9}}>打个比方：这份扫描像手机的耗电检测——能告诉你后台有个程序在持续耗电，但看不到它是哪天装上的、因为什么装上的。</p>
+        <p style={{color:'var(--dim)',fontSize:12.5,lineHeight:1.9}}>这份扫描告诉你后台哪个进程在跑。至于它什么时候装的、怎么卸——那是深度报告的事。</p>
       </div>
 
-      <div className="sec">
-        <div className="cz" style={{color:'var(--gdim)',fontSize:10,marginBottom:14}}>PREQUEL</div>
-        <h3 style={{color:'var(--gold)',fontSize:16,marginBottom:14,fontWeight:700}}>前置剧情信号</h3>
-        <p style={{fontSize:13,lineHeight:2,marginBottom:12}}>有些模式不是这辈子学来的——没人教过你，但你从记事起就会莫名怕某些东西、执着某些东西，像出厂就预装在账号里的程序。地球Online里把这一层叫<span style={{color:'var(--gold)'}}>前置剧情</span>：你这局开始之前的存档记录。</p>
-        {birth.timeKnown?
-          <div style={{padding:'14px 16px',border:'1px dashed var(--gdim)',fontSize:12.5,lineHeight:2}}>本次扫描在你的配置中检测到这一层的遗留信号：一个明确的执念方向，和一段等着被卸载的旧代码。</div>
-          :<div style={{padding:'14px 16px',border:'1px dashed var(--red)',fontSize:12.5,lineHeight:2}}><span style={{color:'var(--red)'}}>⚠ 信号不完整</span> —— 读取这一层需要精确的出生时间。如果能从家人那里确认，这一层就能打开。</div>}
-      </div>
+
 
       <div className="sec"><div className="cz" style={{color:'var(--gdim)',fontSize:10,marginBottom:14}}>CROSS ANALYSIS</div><h3 style={{color:'var(--gold)',fontSize:16,marginBottom:6,fontWeight:700}}>MBTI × {C.name}</h3><div style={{color:'var(--dim)',fontSize:11,marginBottom:14}}>选择你的 MBTI 类型</div>
         <div className="mg">{MBTI_TYPES.map(t=><button key={t} className={"mb "+(mbti===t?"act":"")} onClick={()=>setMbti(t)}>{t}</button>)}</div>
-        {mbti&&mx[mbti]&&(()=>{const t=mx[mbti].split('——');const title=t[0];const body=t.slice(1).join('——');let h=0;for(const ch of mbti+C.name)h+=ch.charCodeAt(0);const st=3+(h%3);return <div className="fade" style={{marginTop:18}}>
-          <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:4}}><span style={{color:'var(--dim)',fontSize:12}}>{mbti} × {C.name}</span><span style={{color:'var(--gold)',fontSize:14,letterSpacing:2}}>{'★'.repeat(st)+'☆'.repeat(5-st)}</span></div>
-          <div style={{color:'var(--gb)',fontSize:18,fontWeight:900,marginBottom:10}}>{title}</div>
-          <p style={{fontSize:13,lineHeight:2}}>{body}</p>
+        {mbti&&mx[mbti]&&(()=>{const parts=mx[mbti].split('——');const title=parts[0];const lines=parts.slice(1).join('——').split('。').filter(s=>s.trim());let h=0;for(const ch of mbti+C.name)h+=ch.charCodeAt(0);const st=3+(h%3);return <div className="fade" style={{marginTop:18}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:6}}><span style={{color:'var(--dim)',fontSize:12}}>{mbti} × {C.name}</span><span style={{color:'var(--gold)',fontSize:14,letterSpacing:2}}>{'★'.repeat(st)+'☆'.repeat(5-st)}</span></div>
+          <div style={{color:'var(--gb)',fontSize:18,fontWeight:900,marginBottom:12}}>{title}</div>
+          {lines.map((s,i)=><p key={i} style={{fontSize:13,lineHeight:2,marginBottom:8}}>{s}。</p>)}
+          <p style={{color:'var(--dim)',fontSize:11,marginTop:8,fontStyle:'italic'}}>—— {C.name}的{mbti}变体。同样的角色模板，你的打法天生和别人不太一样。</p>
         </div>;})()}
       </div>
 
@@ -481,6 +475,7 @@ function Result({answers,birth}){
           <p><span style={{color:'var(--gold)'}}>◆</span> Loop 溯源 — 不是告诉你它在哪，是它从哪来</p>
           <p><span style={{color:'var(--gold)'}}>◆</span> 环境·作息·方位的可执行补丁</p>
           <p><span style={{color:'var(--gold)'}}>◆</span> 按你配置匹配的实体装备</p>
+          <p><span style={{color:'var(--gold)'}}>◆</span> 前置剧情 — 那个比你还老的执念</p>
         </div>
         <p style={{color:'var(--dim)',fontSize:11,marginBottom:16}}>按存档码单份推演 · 引路员私发</p>
         <button className="btn" style={{maxWidth:300,margin:'0 auto'}} onClick={()=>{if(REVIEW_MODE)setShowSample(s=>!s);else alert('微信向引路员发送「深度报告」即可预约');}}>{REVIEW_MODE?(showSample?'收起样例':'微信发送「深度报告」预约（点击预览）'):'微信发送「深度报告」预约'}</button>
