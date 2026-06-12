@@ -312,7 +312,6 @@ function Result({answers,birth}){
   const [unlocked,setUnlocked]=useState(REVIEW_MODE);
   const [mbti,setMbti]=useState(null);
   const [code,setCode]=useState("");
-  const [showSample,setShowSample]=useState(false);
   const B=useMemo(()=>realBazi(birth.y,birth.m,birth.d,birth.hour,birth.timeKnown)||demoBazi(birth.y,birth.m,birth.d),[birth]);
   const C=CLS[B.hiDim][B.variant];
   const baseN=BASE_N[B.hiDim];
@@ -477,16 +476,7 @@ function Result({answers,birth}){
           <p><span style={{color:'var(--gold)'}}>◆</span> 隐藏剧情解锁 — 你的前置任务线</p>
         </div>
         <p style={{color:'var(--dim)',fontSize:11,marginBottom:16}}>按存档码单份推演 · 引路员私发</p>
-        <button className="btn" style={{maxWidth:300,margin:'0 auto'}} onClick={()=>{if(REVIEW_MODE)setShowSample(s=>!s);else alert('微信向引路员发送「隐藏攻略」即可解锁');}}>{REVIEW_MODE?(showSample?'收起样例':'微信发送「隐藏攻略」解锁（点击预览）'):'微信发送「隐藏攻略」解锁'}</button>
-        {showSample&&<div className="fade" style={{textAlign:'left',marginTop:20,padding:18,border:'1px solid var(--gdim)',background:'rgba(0,0,0,.2)'}}>
-          <p style={{color:'var(--red)',fontSize:10,marginBottom:12}}>▲ 审阅样例 · 正式版AI逐份生成</p>
-          <h4 style={{color:'var(--gold)',fontSize:14,fontWeight:700,marginBottom:6}}>一 · 十年版本图谱</h4>
-          <p style={{fontSize:12,lineHeight:2,marginBottom:10}}>当前关卡：「{SE.theme}」版本中段。Boss刷新点 ▒▒▒▒……</p>
-          <h4 style={{color:'var(--gold)',fontSize:14,fontWeight:700,marginBottom:6}}>四 · 系统补丁</h4>
-          <p style={{fontSize:12,lineHeight:2,marginBottom:10}}>{B.element}属 · {B.prefix}系。推荐装备位 ▒▒▒、增益时段 ▒▒▒、有利方位 ▒▒▒……</p>
-          <h4 style={{color:'var(--gold)',fontSize:14,fontWeight:700,marginBottom:6}}>五 · 装备清单</h4>
-          <p style={{fontSize:12,lineHeight:2}}>主装备 · {B.prefix}系神装 // 副装备 · 针对「{L.name}」的抗性装备</p>
-        </div>}
+        <button className="btn" style={{maxWidth:300,margin:'0 auto'}} onClick={()=>alert('微信向引路员发送「隐藏攻略」即可解锁')}>微信发送「隐藏攻略」解锁</button>
         <div style={{color:'var(--dim)',fontSize:10,marginTop:20,lineHeight:2,maxWidth:340,marginLeft:'auto',marginRight:'auto'}}>仅供娱乐与自我探索。可以转发但别太当真——你的人生不由系统定义。</div>
         <div className="cz" style={{color:'var(--dim)',fontSize:9,marginTop:14}}>EARTH ONLINE · v6.0</div>
       </div>
